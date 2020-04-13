@@ -1,7 +1,7 @@
 const dbConfig = {
   HOST: "localhost",
-  USER: "root",
-  PASSWORD: "projektRis2020",
+  USER: process.env.db_user,
+  PASSWORD: process.env.db_password,
   DB: "plivackiKlub",
   dialect: "mysql",
   pool: {

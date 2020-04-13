@@ -5,6 +5,9 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 import cors from "cors";
 import db from "./models/index.js";
+import dotenv from "dotenv";
+
+dotenv.config(); // load env variables from .env file
 
 const app = express();
 
@@ -40,7 +43,9 @@ app.use(function(err, req, res, next) {
 });
 
 // do the db migrations
-db.sequelize.sync();
+// doing them manually with sequelize-cli
+
+// db.sequelize.sync();
 
 app.listen(3000, () => console.log("Server listening on port 3000"));
 
