@@ -1,3 +1,7 @@
+import dotenv from "dotenv";
+
+dotenv.config(); // load env variables from .env file
+
 const dbConfig = {
   HOST: "localhost",
   USER: process.env.db_user,

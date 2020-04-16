@@ -1,5 +1,5 @@
 const Task = (sequelize, Sequelize) => {
-  return sequelize.define("task", {
+  return sequelize.define("tasks", {
     name: {
       type: Sequelize.STRING,
       allowNull: false

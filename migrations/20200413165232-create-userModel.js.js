@@ -31,7 +31,7 @@ module.exports = {
         },
         username: {
           type: Sequelize.STRING,
-          allowNull: false,
+          allowNull: true,
           unique: true
         },
         date_of_birth: {
@@ -40,7 +40,7 @@ module.exports = {
         },
         password: {
           type: Sequelize.STRING,
-          allowNull: false,
+          allowNull: true,
           validate: {
             isGreaterThanEight(value) {
               if (length(value) < 8) {
@@ -57,7 +57,7 @@ module.exports = {
         groupId: {
           type: Sequelize.INTEGER,
           references: {
-            model: "Groups",
+            model: "SwimmingGroups",
             key: "id"
           },
           onUpdate: "CASCADE",
@@ -81,13 +81,6 @@ module.exports = {
         updatedAt: {
           allowNull: false,
           type: Sequelize.DATE
-        }
-      },
-      {
-        instanceMethods: {
-          generateHash: password =>
-            bcrpyt.hashSync(password, bcrpyt.genSaltSync(8), null),
-          validPassword: password => bcrpyt.compareSync(password, this.password)
         }
       }
     );

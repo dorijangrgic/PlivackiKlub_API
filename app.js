@@ -4,10 +4,9 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import cors from "cors";
-import db from "./models/index.js";
-import dotenv from "dotenv";
-
-dotenv.config(); // load env variables from .env file
+import db from "./models/index";
+import groupRoutes from "./routes/groupRoutes";
+import userRoutes from "./routes/userRoutes";
 
 const app = express();
 
@@ -25,6 +24,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+// set app routes
+groupRoutes(app);
+userRoutes(app);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -44,7 +47,6 @@ app.use(function(err, req, res, next) {
 
 // do the db migrations
 // doing them manually with sequelize-cli
-
 // db.sequelize.sync();
 
 app.listen(3000, () => console.log("Server listening on port 3000"));
