@@ -32,7 +32,7 @@ const authenticateToken = (req, res, next) => {
 };
 
 /* 
-Check password and generate token
+Check password and generate token (rename method)
 */
 const comparePassword = (password, userData) => {
   if (bcrypt.compareSync(password, userData.password))
@@ -40,9 +40,8 @@ const comparePassword = (password, userData) => {
   else return "";
 };
 
-
+// maybe move theese methods to permissions folder
 const checkAdminRole = (req, res, next) => {
-  console.log(req.user);
   if (req.user.roleId === 1) next();
   else return res.sendStatus(403);
 };

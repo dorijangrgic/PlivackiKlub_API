@@ -1,14 +1,16 @@
 import db from "../models/index";
 import bcrypt from "bcrypt";
 import { comparePassword } from "../helpers/userHelper";
+import { sendMail } from "../helpers/emailHelper";
 
 const User = db.User;
 
 const register = (req, res) => {
-  // send email with activation link(open once)
   req.body["password"] = null;
   User.create(req.body)
-    .then(data => res.send(data))
+    .then(data => {
+      sendMail(data.email, "Kraljice moja", res);
+    })
     .catch(err =>
       res.status(500).send({
         message: err.message || "Something went wrong while creating new user"
