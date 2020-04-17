@@ -1,5 +1,5 @@
 const Club = (sequelize, Sequelize) => {
-  return sequelize.define("club", {
+  return sequelize.define("clubs", {
     name: {
       type: Sequelize.STRING,
       allowNull: false

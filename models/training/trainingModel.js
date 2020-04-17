@@ -1,5 +1,5 @@
 const Training = (sequelize, Sequelize, group, task) => {
-  const trainingModel = sequelize.define("training", {
+  const trainingModel = sequelize.define("trainings", {
     finished: {
       type: Sequelize.BOOLEAN,
       defaultValue: false,

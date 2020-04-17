@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "projektRis2020",
+    "password": "mysqlserver",
     "database": "plivackiKlub",
     "host": "127.0.0.1",
     "dialect": "mysql",

@@ -1,5 +1,5 @@
 const Role = (sequelize, Sequelize) => {
-  return sequelize.define("role", {
+  return sequelize.define("roles", {
     name: {
       type: Sequelize.STRING,
       allowNull: false
