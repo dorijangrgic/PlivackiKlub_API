@@ -2,34 +2,16 @@ import db from "../models/index";
 const Group = db.Group;
 
 const create = (req, res) => {
-  const group = {
-    name: req.body.name
-  };
-
-  Group.create(group)
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Something went wrong when creating new swimming group"
-      });
-    });
+  Group.create(req.body)
+    .then(data => res.status(200).send(data))
+    .catch(err => res.status(500).send({ message: err.message }));
 };
 
 const findAll = (req, res) => {
-  console.log("Trazim sve grupe");
   // moguca paginacija + filtiranje
-  Group.findAll()
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: err.message || "Error occured while retrieving swimming groups"
-      });
-    });
+  Group.findAll(req.filterAndPagination)
+    .then(data => res.status(200).send(data))
+    .catch(err => res.status(500).send({ message: err.message }));
 };
 
 const findOne = (req, res) => {
@@ -39,65 +21,47 @@ const findOne = (req, res) => {
     .then(data => {
       if (!data) {
         res.status(404).send({
-          message: `Swimming group with id=${id} could not be found`
+          message: `Swimming group not found`
         });
       } else {
-        res.send(data);
+        res.status(200).send(data);
       }
     })
-    .catch(err => {
-      res.status(500).send({
-        message: "Error retrieving swimming group with id=" + id
-      });
-    });
+    .catch(err => res.status(500).send({ message: err.message }));
 };
 
-const update = (req, res) => {
+const update = async (req, res) => {
   const id = req.params.id;
+  const group = await Group.findByPk(id);
 
-  Group.update(req.body, {
-    where: { id: id }
-  })
-    .then(num => {
-      if (num == 1) {
-        res.send({
-          message: "Swimming group successfully updated"
-        });
-      } else {
-        res.send({
-          message: `Cannot update swimming group with id=${id}. Maybe swimming group was not found or req.body is empty!`
-        });
-      }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Error updating swimming group with id=" + id
-      });
-    });
+  if (!group){
+    res.status(404).send({ message: "Swimming group not found!" });
+    return;
+  }
+
+  group
+    .update(req.body)
+    .then(data =>
+      res.status(200).send({ message: "Swimming group successfully updated" })
+    )
+    .catch(err => res.status(500).send({ message: err.message }));
 };
 
-const deleteGroup = (req, res) => {
+const deleteGroup = async (req, res) => {
   const id = req.params.id;
+  const group = await Group.findByPk(id);
 
-  Group.destroy({
-    where: { id: id }
-  })
-    .then(num => {
-      if (num == 1) {
-        res.send({
-          message: `Swimming group with id=${id} is successfully deleted`
-        });
-      } else {
-        res.send({
-          message: `Swimming group with id=${id} cannot be deleted`
-        });
-      }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: `Could not delete swimming group with id=${id}`
-      });
-    });
+  if (!group){
+    res.status(404).send({ message: "Swimming group not found!" });
+    return;
+  }
+
+  group
+    .destroy()
+    .then(data =>
+      res.status(200).send({ message: "Swimming group successfully deleted" })
+    )
+    .catch(err => res.status(500).send({ message: err.message }));
 };
 
 export { create, findOne, findAll, update, deleteGroup };
