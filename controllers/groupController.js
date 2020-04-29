@@ -35,8 +35,7 @@ const update = async (req, res) => {
   const group = await Group.findByPk(id);
 
   if (!group){
-    res.status(404).send({ message: "Swimming group not found!" });
-    return;
+    return res.status(404).send({ message: "Swimming group not found!" });
   }
 
   group
@@ -52,8 +51,7 @@ const deleteGroup = async (req, res) => {
   const group = await Group.findByPk(id);
 
   if (!group){
-    res.status(404).send({ message: "Swimming group not found!" });
-    return;
+    return res.status(404).send({ message: "Swimming group not found!" });
   }
 
   group

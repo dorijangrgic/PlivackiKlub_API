@@ -3,7 +3,7 @@ const Notification = db.Notification;
 
 const create = (req, res) => {
   req.body["authorId"] = req.user.id;
-  
+
   Notification.create(req.body)
     .then(data => res.send(data))
     .catch(err =>
@@ -50,8 +50,7 @@ const update = async (req, res) => {
   const notif = await Notification.findByPk(id);
 
   if (!notif) {
-    res.status(404).send({ message: "Notification does not exist" });
-    return;
+    return res.status(404).send({ message: "Notification does not exist" });
   }
 
   notif
@@ -67,8 +66,7 @@ const deleteNotification = async (req, res) => {
   const notif = await Notification.findByPk(id);
 
   if (!notif) {
-    res.status(404).send({ message: "Notification does not exist" });
-    return;
+    return res.status(404).send({ message: "Notification does not exist" });
   }
 
   notif

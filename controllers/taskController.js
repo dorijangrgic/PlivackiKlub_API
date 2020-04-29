@@ -45,30 +45,32 @@ const update = async (req, res) => {
   const id = req.params.id;
   const task = await Task.findByPk(id);
 
-  if(!task){
-    res.status(404).send({message: "Task does not exist"})
-    return;
+  if (!task) {
+    return res.status(404).send({ message: "Task does not exist" });
   }
 
   task
     .update(req.body)
-    .then(data => res.status(200).send({message: "Task updated successfully"}))
-    .catch(err => res.status(500).send({message: err.message}));
+    .then(data =>
+      res.status(200).send({ message: "Task updated successfully" })
+    )
+    .catch(err => res.status(500).send({ message: err.message }));
 };
 
 const deleteTask = async (req, res) => {
   const id = req.params.id;
   const task = await Task.findByPk(id);
 
-  if(!task){
-    res.status(404).send({message: "Task does not exist"})
-    return;
+  if (!task) {
+    return res.status(404).send({ message: "Task does not exist" });
   }
 
   task
     .destroy()
-    .then(data => res.status(200).send({message: "Task deleted successfully"}))
-    .catch(err => res.status(500).send({message: err.message}));
+    .then(data =>
+      res.status(200).send({ message: "Task deleted successfully" })
+    )
+    .catch(err => res.status(500).send({ message: err.message }));
 };
 
 export { create, findAll, findOne, update, deleteTask };

@@ -1,13 +1,22 @@
 import Express from "express";
-import { register, activate, login } from "../controllers/userController";
+import {
+  register,
+  activate,
+  login,
+  findAll,
+  findOne,
+  update,
+  deleteUser
+} from "../controllers/userController";
 import { checkAdminRole } from "../helpers/auth_guards/authGuard";
 import validate from "../validators/validateErrors";
 import {
   userActivateValidationRules,
   userRegisterValidationRules,
-  userLoginValidationRules
+  userLoginValidationRules,
+  userUpdateValidationRules
 } from "../validators/userValidator";
-import { authenticateToken } from "../helpers/userHelper";
+import { authenticateToken, filterAndPagination } from "../helpers/userHelper";
 
 const userRoutes = app => {
   const router = Express.Router();
@@ -27,6 +36,17 @@ const userRoutes = app => {
     activate
   );
   router.post("/login", userLoginValidationRules(), validate, login);
+  router.get("/", authenticateToken, filterAndPagination, findAll);
+  router.get("/:id", authenticateToken, findOne);
+  router.put(
+    "/:id",
+    authenticateToken,
+    checkAdminRole,
+    userUpdateValidationRules(),
+    validate,
+    update
+  );
+  router.delete("/:id", authenticateToken, checkAdminRole, deleteUser);
 
   app.use("/api/users", router);
 };

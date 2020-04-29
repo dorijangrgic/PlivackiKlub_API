@@ -49,8 +49,31 @@ const userLoginValidationRules = () => {
   ];
 };
 
+const userUpdateValidationRules = () => {
+  return [
+    body("first_name", "First name is required").exists(),
+    body("last_name", "Last name is required").exists(),
+    body("date_of_birth", "Date of birth is required").exists(),
+    body("roleId")
+      .exists()
+      .custom(value => {
+        return Role.findByPk(value).then(data => {
+          if (!data) throw new Error("Role does not exist");
+        });
+      }),
+    body("groupId")
+      .exists()
+      .custom(value => {
+        return Group.findByPk(value).then(data => {
+          if (!data) throw new Error("Group does not exist");
+        });
+      })
+  ];
+};
+
 export {
   userActivateValidationRules,
   userRegisterValidationRules,
-  userLoginValidationRules
+  userLoginValidationRules,
+  userUpdateValidationRules
 };
