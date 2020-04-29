@@ -1,5 +1,5 @@
 const Attendance = (sequelize, Sequelize, user, training) => {
-  const attendanceModel = sequelize.define("attendance", {
+  const attendanceModel = sequelize.define("attendances", {
     finished: {
       type: Sequelize.BOOLEAN,
       defaultValue: false,

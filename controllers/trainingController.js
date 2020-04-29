@@ -1,8 +1,4 @@
 import db from "../models";
-import {
-  getTaskIdsForTrainingId,
-  getTasksById
-} from "../models/training/trainingProvider";
 
 const Training = db.Training;
 const Group = db.Group;
