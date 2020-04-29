@@ -45,32 +45,32 @@ const update = async (req, res) => {
   const id = req.params.id;
 
   const club = await Club.findByPk(id);
-  if(!club){
-    res.status(404).send({message: "Club does not exist"});
-    return;
+  if (!club) {
+    return res.status(404).send({ message: "Club does not exist" });
   }
 
   club
     .update(req.body)
-    .then(data => 
-      res.status(200).send({message: "Club updated successfully"}))
-    .catch(err => res.status(500).send({message: err.message}))
+    .then(data =>
+      res.status(200).send({ message: "Club updated successfully" })
+    )
+    .catch(err => res.status(500).send({ message: err.message }));
 };
 
 const deleteClub = async (req, res) => {
   const id = req.params.id;
 
   const club = await Club.findByPk(id);
-  if(!club){
-    res.status(404).send({message: "Club does not exist"});
-    return;
+  if (!club) {
+    return res.status(404).send({ message: "Club does not exist" });
   }
 
   club
     .destroy()
-    .then(data => 
-      res.status(200).send({message: "Club deleted successfully"}))
-    .catch(err => res.status(500).send({message: err.message}))
+    .then(data =>
+      res.status(200).send({ message: "Club deleted successfully" })
+    )
+    .catch(err => res.status(500).send({ message: err.message }));
 };
 
 export { create, findAll, findOne, update, deleteClub };

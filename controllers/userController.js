@@ -4,6 +4,8 @@ import { comparePassword } from "../helpers/userHelper";
 import { sendMail } from "../helpers/emailHelper";
 
 const User = db.User;
+const Group = db.Group;
+const Role = db.Role;
 
 const register = (req, res) => {
   req.body["password"] = null;
@@ -11,7 +13,7 @@ const register = (req, res) => {
     .then(data => sendMail(data.email, "Kraljice moja", res))
     .catch(err =>
       res.status(500).send({
-        message: err.message || "Something went wrong while creating new user"
+        message: err.message
       })
     );
 };
@@ -44,7 +46,7 @@ const activate = async (req, res) => {
         });
       }
     })
-    .catch(err => console.log(err.message));
+    .catch(err => res.status(500).send({ message: err.message }));
 };
 
 const login = async (req, res) => {
@@ -70,8 +72,57 @@ const login = async (req, res) => {
       res.status(200).send({ token: token });
     }
   } else {
-    res.status(400).send({ message: "User is not verified by admin!" });
+    res.status(400).send({ message: "User is not verified!" });
   }
 };
 
-export { register, activate, login };
+const findAll = (req, res) => {
+  const filterAndPagination = req.filterAndPagination;
+  filterAndPagination["include"] = [Group, Role];
+
+  User.findAll(filterAndPagination)
+    .then(data => res.status(200).send(data))
+    .catch(err => res.status(500).send({ message: err.message }));
+};
+
+const findOne = (req, res) => {
+  const id = req.params.id;
+
+  User.findByPk(id, { include: [Group, Role] })
+    .then(data => {
+      if (!data) {
+        res.status(404).send({ message: "User does not exist" });
+      } else res.status(200).send(data);
+    })
+    .catch(err => res.status(500).send({ message: err.message }));
+};
+
+const update = async (req, res) => {
+  const id = req.params.id;
+  const user = await User.findByPk(id);
+
+  if (!user) {
+    return res.status(404).send({ message: "User does not exist" });
+  }
+
+  user
+    .update(req.body)
+    .then(data => res.send({ message: "User updated successfully" }))
+    .catch(err => res.status(500).send({ message: err.message }));
+};
+
+const deleteUser = async (req, res) => {
+  const id = req.params.id;
+  const user = await User.findByPk(id);
+
+  if (!user) {
+    return res.status(404).send({ message: "User does not exist" });
+  }
+
+  user
+    .destroy()
+    .then(data => res.send({ message: "User deleted successfully" }))
+    .catch(err => res.status(500).send({ message: err.message }));
+};
+
+export { register, activate, login, findAll, findOne, update, deleteUser };

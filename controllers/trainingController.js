@@ -62,8 +62,9 @@ const update = async (req, res) => {
   const training = await Training.findByPk(id);
 
   if (!training) {
-    res.status(404).send({ message: `Training with id ${id} does not exist` });
-    return;
+    return res
+      .status(404)
+      .send({ message: `Training with id ${id} does not exist` });
   }
 
   await TaskTraining.destroy({ where: { trainingId: id } });
@@ -84,8 +85,9 @@ const deleteTraining = async (req, res) => {
   const training = await Training.findByPk(id);
 
   if (!training) {
-    res.status(404).send({ message: `Training with id ${id} does not exist` });
-    return;
+    return res
+      .status(404)
+      .send({ message: `Training with id ${id} does not exist` });
   }
 
   training
