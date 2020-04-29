@@ -9,7 +9,14 @@ const Notification = (sequelize, Sequelize, author) => {
       allowNull: false
     }
   });
-  notifModel.belongsTo(author);
+  notifModel.belongsTo(author, {
+    foreignKey: {
+      name: "authorId",
+      allowNull: false,
+      defaultValue: 0
+    }
+  });
+  return notifModel;
 };
 
 export default Notification;

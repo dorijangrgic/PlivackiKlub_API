@@ -8,9 +8,7 @@ const User = db.User;
 const register = (req, res) => {
   req.body["password"] = null;
   User.create(req.body)
-    .then(data => {
-      sendMail(data.email, "Kraljice moja", res);
-    })
+    .then(data => sendMail(data.email, "Kraljice moja", res))
     .catch(err =>
       res.status(500).send({
         message: err.message || "Something went wrong while creating new user"
@@ -22,13 +20,6 @@ const activate = async (req, res) => {
   const userId = req.params.id;
   const username = req.body.username;
   const password = req.body.password;
-
-  if (!username || !password) {
-    res.status(400).send({
-      message: "Username and password are required"
-    });
-    return;
-  }
 
   const hashPassword = await bcrypt.hash(password, 10);
 
@@ -59,13 +50,6 @@ const activate = async (req, res) => {
 const login = async (req, res) => {
   const usernameOrEmail = req.body.usernameOrEmail;
   const password = req.body.password;
-
-  if (!usernameOrEmail || !password) {
-    res.status(400).send({
-      message: "Email/username and password are required!"
-    });
-    return;
-  }
 
   let user = await User.findOne({ where: { email: usernameOrEmail } });
 

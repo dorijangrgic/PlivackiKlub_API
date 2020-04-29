@@ -1,18 +1,20 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
+import db from "../models";
 
 dotenv.config();
 
 /*
 Generate JWT access token
 */
-const generateToken = (username, userRole) => {
+const generateToken = userData => {
   const payload = {
-    username: username,
-    roleId: userRole
+    id: userData.id,
+    username: userData.username,
+    roleId: userData.roleId
   };
-  return jwt.sign(payload, process.env.jwt_secret_key, { expiresIn: "1800s" });
+  return jwt.sign(payload, process.env.jwt_secret_key, { expiresIn: "3600s" });
 };
 
 /*
@@ -24,8 +26,7 @@ const authenticateToken = (req, res, next) => {
   if (token == null) return res.sendStatus(401);
 
   jwt.verify(token, process.env.jwt_secret_key, (err, user) => {
-    console.log(err);
-    if (err) return res.sendStatus(403);
+    if (err) return res.status(403).send({ message: err.message });
     req.user = user; // payload
     next();
   });
@@ -36,32 +37,44 @@ Check password and generate token (rename method)
 */
 const comparePassword = (password, userData) => {
   if (bcrypt.compareSync(password, userData.password))
-    return generateToken(userData.username, userData.roleId);
+    return generateToken(userData);
   else return "";
 };
 
-// maybe move theese methods to permissions folder
-const checkAdminRole = (req, res, next) => {
-  if (req.user.roleId === 1) next();
-  else return res.sendStatus(403);
-};
+/*
+Filter and pagination middleware
+*/
+const filterAndPagination = (req, res, next) => {
+  const Op = db.Sequelize.Op;
+  const filterAndPaginationObject = {};
 
-const checkCoachRole = (req, res, next) => {
-  if (req.user.roleId === 2) next();
-  else return res.sendStatus(403);
-};
+  // limit and offset
+  if (req.query.limit)
+    filterAndPaginationObject["limit"] = parseInt(req.query.limit);
+  if (req.query.offset)
+    filterAndPaginationObject["offset"] = parseInt(req.query.offset);
 
-const checkSwimmerRole = (req, res, next) => {
-  if (req.user.roleId === 3) next();
-  else return res.sendStatus(403);
-};
+  // order attribute and direction
+  if (req.query.orderBy && req.query.orderDirection)
+    filterAndPaginationObject["order"] = [
+      [req.query.orderBy, req.query.orderDirection]
+    ];
 
+  // filter attribute and value
+  if (req.query.searchValue && req.query.searchAttribute)
+    filterAndPaginationObject["where"] = {
+      [req.query.searchAttribute]: {
+        [Op.like]: `%${req.query.searchValue}%`
+      }
+    };
+
+  req.filterAndPagination = filterAndPaginationObject;
+  next();
+};
 
 export {
   generateToken,
   authenticateToken,
   comparePassword,
-  checkAdminRole,
-  checkCoachRole,
-  checkSwimmerRole
+  filterAndPagination
 };

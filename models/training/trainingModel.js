@@ -10,8 +10,13 @@ const Training = (sequelize, Sequelize, group, task) => {
       allowNull: true
     }
   });
-  trainingModel.belongsTo(group);
-  trainingModel.belongsToMany(task, { through: "trainings_tasks" });
+  trainingModel.belongsTo(group, {
+    foreignKey: {
+      name: "groupId",
+      defaultValue: 0
+    }
+  });
+  trainingModel.belongsToMany(task, { through: "taskTrainings" });
   return trainingModel;
 };
 

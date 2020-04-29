@@ -7,6 +7,10 @@ import cors from "cors";
 import db from "./models/index";
 import groupRoutes from "./routes/groupRoutes";
 import userRoutes from "./routes/userRoutes";
+import notifRoutes from "./routes/notifRoutes";
+import taskRoutes from "./routes/taskRoutes";
+import clubRoutes from "./routes/clubRoutes";
+import trainingRoutes from "./routes/trainingRoutes";
 
 const app = express();
 
@@ -19,6 +23,7 @@ app.use(cors(corsOptions));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
+// set middleware
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -28,6 +33,10 @@ app.use(express.static(path.join(__dirname, "public")));
 // set app routes
 groupRoutes(app);
 userRoutes(app);
+taskRoutes(app);
+notifRoutes(app);
+clubRoutes(app);
+trainingRoutes(app);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
