@@ -8,6 +8,7 @@ import Notification from "./notification/notificationModel";
 import Group from "./group/groupModel";
 import Training from "./training/trainingModel";
 import Attendance from "./attendance/attendanceModel";
+import TaskTraining from "./training/taskTrainingModel";
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
@@ -40,5 +41,6 @@ db.User = User(sequelize, Sequelize, db.Role, db.Group);
 db.Notification = Notification(sequelize, Sequelize, db.User);
 db.Training = Training(sequelize, Sequelize, db.Group, db.Task);
 db.Attendance = Attendance(sequelize, Sequelize, db.User, db.Training);
+db.TaskTraining = TaskTraining(sequelize, Sequelize);
 
 export default db;

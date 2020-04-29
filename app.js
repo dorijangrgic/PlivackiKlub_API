@@ -10,6 +10,7 @@ import userRoutes from "./routes/userRoutes";
 import notifRoutes from "./routes/notifRoutes";
 import taskRoutes from "./routes/taskRoutes";
 import clubRoutes from "./routes/clubRoutes";
+import trainingRoutes from "./routes/trainingRoutes";
 
 const app = express();
 
@@ -35,6 +36,7 @@ userRoutes(app);
 taskRoutes(app);
 notifRoutes(app);
 clubRoutes(app);
+trainingRoutes(app);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
