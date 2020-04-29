@@ -11,6 +11,7 @@ import notifRoutes from "./routes/notifRoutes";
 import taskRoutes from "./routes/taskRoutes";
 import clubRoutes from "./routes/clubRoutes";
 import trainingRoutes from "./routes/trainingRoutes";
+import attendanceRoutes from "./routes/attendanceRoutes";
 
 const app = express();
 
@@ -37,6 +38,7 @@ taskRoutes(app);
 notifRoutes(app);
 clubRoutes(app);
 trainingRoutes(app);
+attendanceRoutes(app);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
