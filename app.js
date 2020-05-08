@@ -60,6 +60,6 @@ app.use(function(err, req, res, next) {
 // doing them manually with sequelize-cli
 // db.sequelize.sync();
 
-app.listen(3000, () => console.log("Server listening on port 3000"));
+app.listen(3030, () => console.log("Server listening on port 3030"));
 
 export default app;

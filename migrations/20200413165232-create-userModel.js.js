@@ -62,7 +62,7 @@ module.exports = {
           },
           onUpdate: "CASCADE",
           onDelete: "CASCADE",
-          allowNull: false
+          allowNull: true
         },
         roleId: {
           type: Sequelize.INTEGER,
@@ -85,7 +85,7 @@ module.exports = {
       }
     );
   },
-
+// dodati admin usera odmah prilikom kreiranja users tablice
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable("Users");
   }
