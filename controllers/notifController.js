@@ -1,5 +1,6 @@
 import db from "../models";
 const Notification = db.Notification;
+const User = db.User;
 
 const create = (req, res) => {
   req.body["authorId"] = req.user.id;
@@ -14,7 +15,10 @@ const create = (req, res) => {
 };
 
 const findAll = (req, res) => {
-  Notification.findAll(req.filterAndPagination)
+  const filterAndPagination = req.filterAndPagination;
+  filterAndPagination["include"] = [User];
+
+  Notification.findAll(filterAndPagination)
     .then(data => {
       res.send(data);
     })

@@ -10,7 +10,7 @@ const Role = db.Role;
 const register = (req, res) => {
   req.body["password"] = null;
   User.create(req.body)
-    .then(data => sendMail(data.email, "Kraljice moja", res))
+    .then(data => sendMail(data.email, `http://localhost:3000/users/activate/${data.id}`, res))
     .catch(err =>
       res.status(500).send({
         message: err.message
@@ -78,7 +78,7 @@ const login = async (req, res) => {
 
 const findAll = (req, res) => {
   const filterAndPagination = req.filterAndPagination;
-  filterAndPagination["include"] = [Group, Role];
+  filterAndPagination["include"] = ["group", Role];
 
   User.findAll(filterAndPagination)
     .then(data => res.status(200).send(data))
@@ -88,7 +88,7 @@ const findAll = (req, res) => {
 const findOne = (req, res) => {
   const id = req.params.id;
 
-  User.findByPk(id, { include: [Group, Role] })
+  User.findByPk(id, { include: ["group", Role] })
     .then(data => {
       if (!data) {
         res.status(404).send({ message: "User does not exist" });
