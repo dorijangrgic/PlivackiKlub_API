@@ -11,6 +11,7 @@ const Training = (sequelize, Sequelize, group, task) => {
     }
   });
   trainingModel.belongsTo(group, {
+    as: "group",
     foreignKey: {
       name: "groupId",
       defaultValue: 0

@@ -26,7 +26,7 @@ const create = (req, res) => {
 };
 
 const findAll = (req, res) => {
-  req.filterAndPagination["include"] = [Group, Task];
+  req.filterAndPagination["include"] = ["group", Task];
 
   Training.findAll(req.filterAndPagination)
     .then(data => res.status(200).send(data))

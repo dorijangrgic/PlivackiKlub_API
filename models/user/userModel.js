@@ -51,6 +51,7 @@ const User = (sequelize, Sequelize, role, group) => {
     }
   });
   userModel.belongsTo(group, {
+    as: "group",
     foreignKey: {
       name: "groupId",
       allowNull: true
