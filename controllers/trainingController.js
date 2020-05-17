@@ -20,7 +20,7 @@ const create = (req, res) => {
       taskIds.forEach(async element => {
         await TaskTraining.create({ trainingId: data.id, taskId: element });
       });
-      res.status(200).send({ message: "Training created successfully" });
+      res.status(200).send(data);
     })
     .catch(err => res.status(500).send({ message: err.message }));
 };
@@ -36,7 +36,7 @@ const findAll = (req, res) => {
 const findOne = (req, res) => {
   const id = req.params.id;
 
-  Training.findByPk(id, { include: [Task, Group] })
+  Training.findByPk(id, { include: ["group"] })
     .then(data => {
       if (!data) {
         res
@@ -48,6 +48,25 @@ const findOne = (req, res) => {
     })
     .catch(err => res.status(500).send({ message: err.message }));
 };
+
+const findTasks = async (req, res) => {
+  console.log("Dohvacam taskove za trening");
+  const sequelize = db.sequelize;
+
+  const id = req.params.id;
+
+  const training = await Training.findByPk(id);
+  if (!training) {
+    return res.status(404).send({ message: "Training does not exist" });
+  }
+
+  const result = await sequelize.query(
+    `select * from Tasks t where t.id in (select tt.taskId from TaskTrainings tt where tt.trainingId = ${id})`
+  );
+
+  console.log(result[0].length);
+  res.send(result[0]);
+}
 
 const update = async (req, res) => {
   const groupId = req.body.groupId;
@@ -98,4 +117,4 @@ const deleteTraining = async (req, res) => {
     .catch(err => res.status(500).send({ message: err.message }));
 };
 
-export { create, findAll, findOne, update, deleteTraining };
+export { create, findAll, findOne, update, deleteTraining, findTasks };

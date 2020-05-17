@@ -3,6 +3,8 @@ import {
   create,
   findAll,
   findOne,
+  findUsers,
+  findTrainings,
   update,
   deleteGroup
 } from "../controllers/groupController";
@@ -28,6 +30,8 @@ const groupRoutes = app => {
   );
   router.get("/", authenticateToken, filterAndPagination, findAll);
   router.get("/:id", authenticateToken, findOne);
+  router.get("/:id/users", authenticateToken, findUsers);
+  router.get("/:id/trainings", authenticateToken, findTrainings);
   router.put(
     "/:id",
     authenticateToken,

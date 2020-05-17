@@ -5,12 +5,22 @@ import { sendMail } from "../helpers/emailHelper";
 
 const User = db.User;
 const Group = db.Group;
+const Attendance = db.Attendance;
 const Role = db.Role;
 
 const register = (req, res) => {
   req.body["password"] = null;
   User.create(req.body)
-    .then(data => sendMail(data.email, `http://localhost:3000/users/activate/${data.id}`, res))
+    .then(data => {
+      sendMail(
+        data.email,
+        `http://localhost:3000/users/activate/${data.id}`,
+        res
+      );
+      return res
+        .status(200)
+        .send({ message: "User successfully registered, email sent!" });
+    })
     .catch(err =>
       res.status(500).send({
         message: err.message
@@ -85,10 +95,31 @@ const findAll = (req, res) => {
     .catch(err => res.status(500).send({ message: err.message }));
 };
 
+const findAttendances = async (req, res) => {
+  const id = req.params.id;
+  console.log("User id", id);
+
+  const user = await User.findByPk(id);
+
+  if (!user) {
+    return res.status(404).send({ message: "User not found!" });
+  }
+
+  Attendance.findAll({
+    where: {
+      userId: id
+    }
+  })
+    .then(data => res.send(data))
+    .catch(err => res.status(500).send({ message: err.message }));
+};
+
 const findOne = (req, res) => {
   const id = req.params.id;
 
-  User.findByPk(id, { include: ["group", Role] })
+  User.findByPk(id,{
+    attributes: { exclude: ['password'] }
+  })
     .then(data => {
       if (!data) {
         res.status(404).send({ message: "User does not exist" });
@@ -125,4 +156,13 @@ const deleteUser = async (req, res) => {
     .catch(err => res.status(500).send({ message: err.message }));
 };
 
-export { register, activate, login, findAll, findOne, update, deleteUser };
+export {
+  register,
+  activate,
+  login,
+  findAll,
+  findOne,
+  findAttendances,
+  update,
+  deleteUser
+};

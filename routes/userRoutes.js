@@ -5,6 +5,7 @@ import {
   login,
   findAll,
   findOne,
+  findAttendances,
   update,
   deleteUser
 } from "../controllers/userController";
@@ -38,6 +39,7 @@ const userRoutes = app => {
   router.post("/login", userLoginValidationRules(), validate, login);
   router.get("/", authenticateToken, filterAndPagination, findAll);
   router.get("/:id", authenticateToken, findOne);
+  router.get("/:id/attendances", authenticateToken, findAttendances);
   router.put(
     "/:id",
     authenticateToken,

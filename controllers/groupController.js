@@ -1,5 +1,7 @@
 import db from "../models/index";
 const Group = db.Group;
+const User = db.User;
+const Training = db.Training;
 
 const create = (req, res) => {
   Group.create(req.body)
@@ -30,11 +32,51 @@ const findOne = (req, res) => {
     .catch(err => res.status(500).send({ message: err.message }));
 };
 
+const findUsers = async (req, res) => {
+  const id = req.params.id;
+  console.log("Group id", id);
+
+  const group = await Group.findByPk(id);
+
+  if (!group) {
+    return res.status(404).send({ message: "Swimming group not found!" });
+  }
+
+  User.findAll({
+    where: {
+      groupId: id,
+      roleId: 3
+    }
+  })
+    .then(data => res.send(data))
+    .catch(err => res.status(500).send({ message: err.message }));
+};
+
+const findTrainings = async (req, res) => {
+  const id = req.params.id;
+  console.log("Group id", id);
+
+  const group = await Group.findByPk(id);
+
+  if (!group) {
+    return res.status(404).send({ message: "Swimming group not found!" });
+  }
+
+  Training.findAll({
+    where: {
+      groupId: id,
+    }
+  })
+    .then(data => res.send(data))
+    .catch(err => res.status(500).send({ message: err.message }));
+};
+
+
 const update = async (req, res) => {
   const id = req.params.id;
   const group = await Group.findByPk(id);
 
-  if (!group){
+  if (!group) {
     return res.status(404).send({ message: "Swimming group not found!" });
   }
 
@@ -50,7 +92,7 @@ const deleteGroup = async (req, res) => {
   const id = req.params.id;
   const group = await Group.findByPk(id);
 
-  if (!group){
+  if (!group) {
     return res.status(404).send({ message: "Swimming group not found!" });
   }
 
@@ -62,4 +104,4 @@ const deleteGroup = async (req, res) => {
     .catch(err => res.status(500).send({ message: err.message }));
 };
 
-export { create, findOne, findAll, update, deleteGroup };
+export { create, findOne, findAll, findUsers,findTrainings, update, deleteGroup };

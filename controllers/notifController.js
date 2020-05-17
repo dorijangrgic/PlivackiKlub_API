@@ -32,7 +32,7 @@ const findAll = (req, res) => {
 const findOne = (req, res) => {
   const id = req.params.id;
 
-  Notification.findByPk(id)
+  Notification.findByPk(id, {include: [User]})
     .then(data => {
       if (!data) {
         res.status(404).send({

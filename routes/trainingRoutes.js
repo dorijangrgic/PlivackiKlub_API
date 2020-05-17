@@ -4,6 +4,7 @@ import {
   findAll,
   findOne,
   update,
+  findTasks,
   deleteTraining
 } from "../controllers/trainingController";
 import { authenticateToken, filterAndPagination } from "../helpers/userHelper";
@@ -24,6 +25,7 @@ const trainingRoutes = app => {
   );
   router.get("/", authenticateToken, filterAndPagination, findAll);
   router.get("/:id", authenticateToken, findOne);
+  router.get("/:id/tasks", authenticateToken, findTasks);
   router.put(
     "/:id",
     authenticateToken,

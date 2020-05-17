@@ -1,5 +1,7 @@
 import db from "../models";
 const Club = db.Club;
+const Group = db.Group;
+const User = db.User;
 
 const create = (req, res) => {
   Club.create(req.body)
@@ -19,6 +21,43 @@ const findAll = (req, res) => {
         message: err.message
       })
     );
+};
+
+const findGroups = async (req, res) => {
+  const id = req.params.id;
+
+  const club = await Club.findByPk(id);
+  if (!club) {
+    return res.status(404).send({ message: "Club does not exist" });
+  }
+
+  Group.findAll({
+    where: {
+      clubId: id
+    }
+  })
+    .then(data => res.send(data))
+    .catch(err => res.status(500).send({ message: err.message }));
+};
+
+const findUsers = async (req, res) => {
+  console.log("Dohvacam usere za klub");
+  const sequelize = db.sequelize;
+
+  const id = req.params.id;
+
+  const club = await Club.findByPk(id);
+  if (!club) {
+    return res.status(404).send({ message: "Club does not exist" });
+  }
+
+  const result = await sequelize.query(
+    `select * from Users u where u.groupId in (select sg.id from SwimmingGroups sg where sg.clubId = ${id})`
+  );
+
+  console.log(result[0].length);
+  res.send(result[0]);
+
 };
 
 const findOne = (req, res) => {
@@ -73,4 +112,4 @@ const deleteClub = async (req, res) => {
     .catch(err => res.status(500).send({ message: err.message }));
 };
 
-export { create, findAll, findOne, update, deleteClub };
+export { create, findAll, findOne, update, deleteClub, findGroups, findUsers };

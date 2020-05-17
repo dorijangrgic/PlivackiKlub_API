@@ -3,6 +3,8 @@ import {
   create,
   findAll,
   findOne,
+  findGroups,
+  findUsers,
   update,
   deleteClub
 } from "../controllers/clubController";
@@ -14,10 +16,26 @@ import validate from "../validators/validateErrors";
 const clubRoutes = app => {
   const router = Express.Router();
 
-  router.post("/", authenticateToken, checkAdminRole, clubValidationRules(), validate, create);
+  router.post(
+    "/",
+    authenticateToken,
+    checkAdminRole,
+    clubValidationRules(),
+    validate,
+    create
+  );
   router.get("/", authenticateToken, filterAndPagination, findAll);
   router.get("/:id", authenticateToken, findOne);
-  router.put("/:id", authenticateToken, checkAdminRole, clubValidationRules(), validate, update);
+  router.get("/:id/groups", authenticateToken, findGroups);
+  router.get("/:id/users", authenticateToken, findUsers);
+  router.put(
+    "/:id",
+    authenticateToken,
+    checkAdminRole,
+    clubValidationRules(),
+    validate,
+    update
+  );
   router.delete("/:id", authenticateToken, checkAdminRole, deleteClub);
 
   app.use("/api/clubs", router);
